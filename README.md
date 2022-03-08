@@ -17,7 +17,25 @@ It then returns an array of lexemes. The user specifies it's to be printed using
 ## Reserved Words
 var, procedure, call, begin, end, if, do, while, read, write
 ## Special Symbols
-. [ ] ,
+. [ ] , ; := ? : ( ) == <> < <= > >= + - * / %
+## Identifiers
+letter (letter | digit)*
+## Numbers
+(digit)<sup>+</sup>
+## Invisible Characters
+tab or newline, detected with iscntrl() and whitespaces with isspace()
+## Comments
+Beign with // and end with newline or EOF ('\0') \
+Comments should be ignored and not tokenized \
+Newline on Macs/Linux are '\n' \
+Newline on Windows are '\r\n' \
+Need to account for both
 
-## Appendixes
+# Errors
+* Invalid Identifier: (identifiers don't begin with digits) \
+* Number Length: (numbers at most 5 digits) \
+* Identifier Length: (identifier at most 11 letters or digits)
+* Invalid Symbol
+
+# Appendixes
 [Appendexes](HW2InstructionsSpring2022_Almalki.pdf)
