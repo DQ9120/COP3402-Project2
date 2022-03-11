@@ -25,7 +25,7 @@ letter (letter | digit)*
 ## Invisible Characters
 tab or newline, detected with iscntrl() and whitespaces with isspace()
 ## Comments
-Beign with // and end with newline or EOF ('\0') \
+Begin with // and end with newline or EOF ('\0') \
 Comments should be ignored and not tokenized \
 Newline on Macs/Linux are '\n' \
 Newline on Windows are '\r\n' \
