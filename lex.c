@@ -18,54 +18,19 @@ int reservedcheck(char *buffer);
 void printlexerror(int type);
 void printtokens();
 
-
 lexeme *lexanalyzer(char *input, int printFlag)
 {
 	list = malloc(sizeof(lexeme) * MAX_NUMBER_TOKENS);
 	lex_index = 0;
 	
-	/// Index within input
-	int curInd = 0;
-	/// Index within token
-	int tokInd = 0;
-	
-	char curChar = input[curInd];
 	char reservedWords[10][12] = {"var", "procedure", "call", "begin", "end", "if", "do", "while", "read", "write"};
 	char specialSymbols[21][3] = {".", "[", "]", ",", ";", ":=", "?", ":", "(", ")", "==", "<>", "<", "<=", ">", ">=", "+", "-", "*", "/", "%"};
-	char * curToken = calloc(12, sizeof(char));
 	
-	while (curChar != '\0')
+	char * curLine = strtok(input, "\n");
+	
+	while ()
 	{
-		// Checks for control characters and spaces
-		if (iscntrl(curChar) || curChar == ' ')
-		{
-			/// Evaluate curToken
-			/// if curToken isn't empty
-				/// add lexeme to list
-				/// clear curToken
-			
-			///Then...
-			curChar = input[curInd++];
-			continue;
-		}
 		
-		/// Checks for numbers
-		else if (isdigit(curChar))
-		{
-			/// Check if curToken is empty
-			if (strlen(curToken) == 0)
-			{
-				strncat(curToken, curChar, 1);
-				tokInd++;
-				curChar = input[curInd++];
-				continue;
-			}
-			
-			/// Check if curToken is valid
-			/// Check what token starts with
-			/// Check what previous character in token is
-			else if ()
-		}
 	}
 	
 	if (printFlag)
