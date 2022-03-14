@@ -43,7 +43,7 @@ lexeme *lexanalyzer(char *input, int printFlag)
 	
 	while (curChar != '\0')
 	{
-		if (isctrl(curChar) | curChar == ' ')
+		if (isctrl(curChar) || isspace(curChar))
 		{
 			curChar = input[++inputIndex];
 			continue;
