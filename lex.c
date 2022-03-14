@@ -30,7 +30,7 @@ int alphaToken(char * input, int inputIndex)
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
 	
-	char * buffer
+	char * buffer = calloc(12, sizeof(char));
 }
 
 lexeme *lexanalyzer(char *input, int printFlag)
