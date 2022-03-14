@@ -19,8 +19,7 @@ int lex_index;
 int alphaToken(char * input, int inputIndex);
 int numberToken(char * input, int inputIndex);
 int symbolToken(char * input, int inputIndex);
-int comment(char * input, int inputIndex);
-int reservedcheck(char *buffer);
+int reservedCheck(char *buffer);
 void printlexerror(int type);
 void printtokens();
 
@@ -30,7 +29,209 @@ int alphaToken(char * input, int inputIndex)
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
 	
-	char * buffer = calloc(12, sizeof(char));
+	char buffer[13] = "\0";
+	strncat(buffer, &curChar, 1);
+	
+	while (strlen(buffer) < 12)
+	{
+		if (isdigit(nextChar) || isalpha(nextChar))
+		{
+			curChar = nextChar;
+			curIndex++;
+			strncat(buffer, &curChar, 1);
+			nextChar = input[curIndex + 1];
+			continue;
+		}
+		
+		break;
+	}
+	
+	/// Identifier Length Error
+	if (strlen(buffer) == 12)
+		return -1;
+	
+	/// If buffer is a reserved word, it will be handled within reservedCheck
+	/// Otherwise buffer is an identifier
+	if (reservedCheck(buffer) == 0)
+	{
+		list[lex_index].type = identsym;
+		strcpy(list[lex_index++].name, buffer);
+	}
+	
+	return ++curIndex;
+}
+
+int reservedCheck(char * buffer)
+{
+	token_type type;
+	
+	if (strcmp(buffer, "var") == 0)
+		type = varsym;
+	else if (strcmp(buffer, "procedure") == 0)
+		type = procsym;
+	else if (strcmp(buffer, "call") == 0)
+		type = callsym;
+	else if (strcmp(buffer, "begin") == 0)
+		type = beginsym;
+	else if (strcmp(buffer, "end") == 0)
+		type = endsym;
+	else if (strcmp(buffer, "if") == 0)
+		type = ifsym;
+	else if (strcmp(buffer, "do") == 0)
+		type = dosym;
+	else if (strcmp(buffer, "read") == 0)
+		type = readsym;
+	else if (strcmp(buffer, "write") == 0)
+		type = writesym;
+	else if (strcmp(buffer, "while") == 0)
+		type = whilesym;
+	else
+		return 0;
+	
+	list[lex_index++].type = type;
+	return 1;
+}
+
+int numberToken(char * input, int inputIndex)
+{
+	char curChar = input[inputIndex];
+	char nextChar = input[inputIndex + 1];
+	int curIndex = inputIndex;
+	
+	char buffer[7] = "\0";
+	strncat(buffer, &curChar, 1);
+	
+	while (strlen(buffer) < 6)
+	{
+		/// Invalid Identifier Error
+		if (isalpha(nextChar))
+			return -2;
+		
+		else if (isdigit(nextChar))
+		{
+			curChar = nextChar;
+			curIndex++;
+			strncat(buffer, &curChar, 1);
+			nextChar = input[curIndex + 1];
+			continue;
+		}
+		
+		break;
+	}
+	
+	/// Number Length Error
+	if (strlen(buffer) == 6)
+		return -1;
+	
+	list[lex_index].type = numbersym;
+	list[lex_index++].value = atoi(buffer);
+	return ++curIndex;
+}
+
+int symbolToken(char * input, int inputIndex)
+{
+	char curChar = input[inputIndex];
+	char nextChar = input[inputIndex + 1];
+	int curIndex = inputIndex;
+	
+	switch (curChar)
+	{
+		case '.':
+			list[lex_index++].type = periodsym;
+			return ++inputIndex;
+		case '[':
+			list[lex_index++].type = lbracketsym;
+			return ++inputIndex;
+		case ']':
+			list[lex_index++].type = rbracketsym;
+			return ++inputIndex;
+		case ',':
+			list[lex_index++].type = commasym;
+			return ++inputIndex;
+		case ';':
+			list[lex_index++].type = semicolonsym;
+			return ++inputIndex;
+		case '?':
+			list[lex_index++].type = questionsym;
+			return ++inputIndex;
+		case '(':
+			list[lex_index++].type = lparenthesissym;
+			return ++inputIndex;
+		case ')':
+			list[lex_index++].type = rparenthesissym;
+			return ++inputIndex;
+		case '%':
+			list[lex_index++].type = modsym;
+			return ++inputIndex;
+		case '*':
+			list[lex_index++].type = multsym;
+			return ++inputIndex;
+		case '-':
+			list[lex_index++].type = subsym;
+			return ++inputIndex;
+		case '+':
+			list[lex_index++].type = addsym;
+			return ++inputIndex;
+		case '<':
+			if (nextChar == '>')
+			{
+				list[lex_index++].type = neqsym;
+				return inputIndex + 2;
+			}
+			
+			if (nextChar == '=')
+			{
+				list[lex_index++].type = leqsym;
+				return inputIndex + 2;
+			}
+			
+			list[lex_index++].type = lsssym;
+			return ++inputIndex;
+		case ':':
+			if (nextChar == '=')
+			{
+				list[lex_index++].type = assignsym;
+				return inputIndex + 2;
+			}
+
+			list[lex_index++].type = colonsym;
+			return ++inputIndex;
+		case '=':
+			if (nextChar == '=')
+			{
+				list[lex_index++].type = eqlsym;
+				return inputIndex + 2;
+			}
+			
+			return -1;
+		case '>':
+			if (nextChar == '=')
+			{
+				list[lex_index++].type = geqsym;
+				return inputIndex + 2;
+			}
+			
+			list[lex_index++].type = gtrsym;
+			return ++inputIndex;
+		case '/':
+			/// I think this correctly handles comments, won't know till test
+			if (nextChar == '/')
+			{
+				curChar = nextChar;
+				curIndex++;
+				while (curChar != '\n' || curChar != '\0')
+				{
+					curChar = input[++curIndex];
+				}
+				
+				return ++curIndex;
+			}
+			
+			list[lex_index++].type = divsym;
+			return ++inputIndex;
+		default:
+			return -1;
+	}
 }
 
 lexeme *lexanalyzer(char *input, int printFlag)
@@ -69,10 +270,6 @@ lexeme *lexanalyzer(char *input, int printFlag)
 				break;
 			}
 			
-			/// Reached EOF
-			else if (inputIndex == -3)
-				break;	
-			
 			/// No errors
 			else
 			{
@@ -93,10 +290,6 @@ lexeme *lexanalyzer(char *input, int printFlag)
 				break;
 			}
 			
-			/// Reached EOF
-			else if (inputIndex == -2)
-				break;	
-			
 			/// No error
 			else
 			{
@@ -116,10 +309,6 @@ lexeme *lexanalyzer(char *input, int printFlag)
 					printlexerror(4);
 				break;
 			}
-			
-			/// Reached EOF
-			else if (inputIndex == -2)
-				break;	
 			
 			/// No error
 			else
