@@ -10,13 +10,19 @@
 lexeme *list;
 int lex_index;
 
-int alphatoken();
-int numbertoken();
-int symboltoken();
-int comment();
+int alphaToken(char * input, int inputIndex);
+int numberToken(char * input, int inputIndex);
+int symbolToken(char * input, int inputIndex);
+int comment(char * input, int inputIndex);
 int reservedcheck(char *buffer);
 void printlexerror(int type);
 void printtokens();
+
+int alphaToken(char * input, int inputIndex)
+{
+	char curChar = input[inputIndex];
+	int curIndex = inputIndex;
+}
 
 lexeme *lexanalyzer(char *input, int printFlag)
 {
@@ -26,11 +32,120 @@ lexeme *lexanalyzer(char *input, int printFlag)
 	char reservedWords[10][12] = {"var", "procedure", "call", "begin", "end", "if", "do", "while", "read", "write"};
 	char specialSymbols[21][3] = {".", "[", "]", ",", ";", ":=", "?", ":", "(", ")", "==", "<>", "<", "<=", ">", ">=", "+", "-", "*", "/", "%"};
 	
-	char * curLine = strtok(input, "\n");
+	/// Current index within input
+	int inputIndex = 0;
+	/// Current character within input
+	char curChar = input[inputIndex];
 	
-	while ()
+	while (curChar != '\0')
 	{
+		/// Current character is whitespace
+		if (isctrl(curChar) | curChar == ' ')
+		{
+			curChar = input[++inputIndex];
+			continue;
+		}
 		
+		/// Current character is a digit
+		else if (isdigit(curChar))
+		{
+			inputIndex = numberToken(input, inputIndex);
+			
+			/// Number Length Error
+			if (inputIndex == -1)
+			{
+				if (printFlag)
+				{
+					printlexerror(2);
+				}
+				
+				break;
+			}
+			
+			/// Invalid Identifier Error
+			else if (inputIndex == -2)
+			{
+				if (printFlag)
+				{
+					printlexerror(1);	
+				}
+				
+				break;
+			}
+			
+			/// Reached EOF
+			else if (inputIndex == -3)
+			{
+				break;	
+			}
+			
+			/// No errors
+			else
+			{
+				curChar = input[inputIndex];
+				continue;
+			}
+		}
+		
+		/// Current character is a letter
+		else if (isalpha(curChar))
+		{
+			inputIndex = alphaToken(input, inputIndex);
+			
+			/// Identifier Length Error
+			if (inputIndex == -1)
+			{
+				if (printFlag)
+				{
+					printlexerror(3);
+				}
+				
+				break;
+			}
+			
+			/// Reached EOF
+			else if (inputIndex == -2)
+			{
+				break;	
+			}
+			
+			/// No error
+			else
+			{
+				curChar = input[inputIndex];
+				continue;
+			}
+		}
+		
+		/// Other characters
+		else
+		{
+			inputIndex = symbolToken(input, inputIndex);
+			
+			/// Invalid Symbol Error
+			if (inputIndex == -1)
+			{
+				if (printFlag)
+				{
+					printlexerror(4);
+				}
+				
+				break;
+			}
+			
+			/// Reached EOF
+			else if (inputIndex == -2)
+			{
+				break;	
+			}
+			
+			/// No error
+			else
+			{
+				curChar = input[inputIndex];
+				continue;
+			}
+		}
 	}
 	
 	if (printFlag)
