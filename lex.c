@@ -229,6 +229,7 @@ int symbolToken(char * input, int inputIndex)
 			
 			list[lex_index++].type = divsym;
 			return ++inputIndex;
+		/// If it doesn't hit any of these cases, it's an invalid symbol
 		default:
 			return -1;
 	}
