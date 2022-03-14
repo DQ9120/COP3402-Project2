@@ -1,3 +1,9 @@
+/*
+DAVID QUALLS
+JENNA BUSCH
+KYLE MAUTER
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -21,7 +27,10 @@ void printtokens();
 int alphaToken(char * input, int inputIndex)
 {
 	char curChar = input[inputIndex];
+	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
+	
+	char * buffer
 }
 
 lexeme *lexanalyzer(char *input, int printFlag)
@@ -29,24 +38,17 @@ lexeme *lexanalyzer(char *input, int printFlag)
 	list = malloc(sizeof(lexeme) * MAX_NUMBER_TOKENS);
 	lex_index = 0;
 	
-	char reservedWords[10][12] = {"var", "procedure", "call", "begin", "end", "if", "do", "while", "read", "write"};
-	char specialSymbols[21][3] = {".", "[", "]", ",", ";", ":=", "?", ":", "(", ")", "==", "<>", "<", "<=", ">", ">=", "+", "-", "*", "/", "%"};
-	
-	/// Current index within input
 	int inputIndex = 0;
-	/// Current character within input
 	char curChar = input[inputIndex];
 	
 	while (curChar != '\0')
 	{
-		/// Current character is whitespace
 		if (isctrl(curChar) | curChar == ' ')
 		{
 			curChar = input[++inputIndex];
 			continue;
 		}
 		
-		/// Current character is a digit
 		else if (isdigit(curChar))
 		{
 			inputIndex = numberToken(input, inputIndex);
@@ -55,10 +57,7 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			if (inputIndex == -1)
 			{
 				if (printFlag)
-				{
 					printlexerror(2);
-				}
-				
 				break;
 			}
 			
@@ -66,18 +65,13 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			else if (inputIndex == -2)
 			{
 				if (printFlag)
-				{
 					printlexerror(1);	
-				}
-				
 				break;
 			}
 			
 			/// Reached EOF
 			else if (inputIndex == -3)
-			{
 				break;	
-			}
 			
 			/// No errors
 			else
@@ -87,7 +81,6 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			}
 		}
 		
-		/// Current character is a letter
 		else if (isalpha(curChar))
 		{
 			inputIndex = alphaToken(input, inputIndex);
@@ -96,18 +89,13 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			if (inputIndex == -1)
 			{
 				if (printFlag)
-				{
 					printlexerror(3);
-				}
-				
 				break;
 			}
 			
 			/// Reached EOF
 			else if (inputIndex == -2)
-			{
 				break;	
-			}
 			
 			/// No error
 			else
@@ -117,7 +105,6 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			}
 		}
 		
-		/// Other characters
 		else
 		{
 			inputIndex = symbolToken(input, inputIndex);
@@ -126,18 +113,13 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			if (inputIndex == -1)
 			{
 				if (printFlag)
-				{
 					printlexerror(4);
-				}
-				
 				break;
 			}
 			
 			/// Reached EOF
 			else if (inputIndex == -2)
-			{
 				break;	
-			}
 			
 			/// No error
 			else
