@@ -27,20 +27,20 @@ void printtokens();
 /// Handles the case when our first character of a new token is a letter
 int alphaToken(char * input, int inputIndex)
 {
-  /// Stores our current character, the next character, and our current index within the input
+        /// Stores our current character, the next character, and our current index within the input
 	char curChar = input[inputIndex];
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
  
-  /// Creates a buffer of length 13 that just contains the null terminator
-  /// Then we add the current character to the buffer
+        /// Creates a buffer of length 13 that just contains the null terminator
+        /// Then we add the current character to the buffer
 	char buffer[13] = "\0";
 	strncat(buffer, &curChar, 1);
 	
-  /// We loop while the buffer's length is less than 12
+        /// We loop while the buffer's length is less than 12
 	while (strlen(buffer) < 12)
 	{
-    /// If the next character is a digit or a letter, we add it to the buffer and get the next character
+                /// If the next character is a digit or a letter, we add it to the buffer and get the next character
 		if (isdigit(nextChar) || isalpha(nextChar))
 		{
 			curChar = nextChar;
@@ -50,7 +50,7 @@ int alphaToken(char * input, int inputIndex)
 			continue;
 		}
 		
-    /// If the current character is not a digit or a letter, we need end our loop
+                /// If the current character is not a digit or a letter, we need end our loop
 		break;
 	}
 	
@@ -74,9 +74,9 @@ int reservedCheck(char * buffer)
 {
 	token_type type;
 	
-  /// This will compare the buffer against all of the possible reserved words
-  /// It will return 0 if the buffer is not a reserved word
-  /// Otherwise it returns 1
+        /// This will compare the buffer against all of the possible reserved words
+        /// It will return 0 if the buffer is not a reserved word
+        /// Otherwise it returns 1
 	if (strcmp(buffer, "var") == 0)
 		type = varsym;
 	else if (strcmp(buffer, "procedure") == 0)
@@ -107,24 +107,24 @@ int reservedCheck(char * buffer)
 /// Handles the case that the first character of a new token is a digit
 int numberToken(char * input, int inputIndex)
 {
-  /// Stores the current character, the next character, and the current index with input
+        /// Stores the current character, the next character, and the current index with input
 	char curChar = input[inputIndex];
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
  
-  /// Creates a buffer of size 7 that just stores the null terminator
-  /// Then we add the first character to the buffer
+        /// Creates a buffer of size 7 that just stores the null terminator
+        /// Then we add the first character to the buffer
 	char buffer[7] = "\0";
 	strncat(buffer, &curChar, 1);
 	
-  /// We loop while the buffer's length is less than 6
+        /// We loop while the buffer's length is less than 6
 	while (strlen(buffer) < 6)
 	{
 		/// Invalid Identifier Error
 		if (isalpha(nextChar))
 			return -2;
 		
-    /// If the net character is a digit, we add to the buffer and get the next character
+                /// If the net character is a digit, we add to the buffer and get the next character
 		else if (isdigit(nextChar))
 		{
 			curChar = nextChar;
@@ -134,7 +134,7 @@ int numberToken(char * input, int inputIndex)
 			continue;
 		}
 		
-    /// We break if we encounter a non-alphanumeric character
+                /// We break if we encounter a non-alphanumeric character
 		break;
 	}
 	
@@ -150,13 +150,13 @@ int numberToken(char * input, int inputIndex)
 /// Handles the case where the first character of a new token is not alphanumeric
 int symbolToken(char * input, int inputIndex)
 {
-  /// Gets our current character, next character, and current index within input
+        /// Gets our current character, next character, and current index within input
 	char curChar = input[inputIndex];
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
   
-  /// We handle cases based on what the current character is
-  /// Some special symbols are multiple characters, and those are handled
+        /// We handle cases based on what the current character is
+        /// Some special symbols are multiple characters, and those are handled
 	switch (curChar)
 	{
 		case '.':
@@ -237,20 +237,18 @@ int symbolToken(char * input, int inputIndex)
 			list[lex_index++].type = gtrsym;
 			return ++inputIndex;
 		case '/':
-			/// I think this correctly handles comments, won't know till test
-      /// Update: it does not, i am working on fixing it
 			if (nextChar == '/')
 			{
 				curChar = nextChar;
 				curIndex++;
         
-        char curCharString[] = {curChar, '\0'};
+                                char curCharString[] = {curChar, '\0'};
         
 				while (curChar != '\n' && curChar != '\0' && curChar != '\r' && strcmp("\r\n", curCharString) != 0)
 				{
 					curChar = input[++curIndex];
-          char tempChar[] = {curChar, '\0'};
-          strcpy(curCharString, tempChar);
+                                        char tempChar[] = {curChar, '\0'};
+                                        strcpy(curCharString, tempChar);
 				}
 				
 				return curIndex;
