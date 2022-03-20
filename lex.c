@@ -16,6 +16,8 @@ KYLE MAUTER
 lexeme *list;
 int lex_index;
 
+FILE * IFP;
+
 /// Prototypes
 int alphaToken(char * input, int inputIndex);
 int numberToken(char * input, int inputIndex);
@@ -63,6 +65,7 @@ int alphaToken(char * input, int inputIndex)
 	if (reservedCheck(buffer) == 0)
 	{
 		list[lex_index].type = identsym;
+                list[lex_index].value = identsym;
 		strcpy(list[lex_index++].name, buffer);
 	}
  
@@ -78,7 +81,7 @@ int reservedCheck(char * buffer)
         /// It will return 0 if the buffer is not a reserved word
         /// Otherwise it returns 1
 	if (strcmp(buffer, "var") == 0)
-		type = varsym;
+                type = varsym;
 	else if (strcmp(buffer, "procedure") == 0)
 		type = procsym;
 	else if (strcmp(buffer, "call") == 0)
@@ -101,6 +104,8 @@ int reservedCheck(char * buffer)
 		return 0;
 	
 	list[lex_index++].type = type;
+        list[lex_index].value = type;
+        strcpy(list[lex_index].name, buffer);
 	return 1;
 }
 
@@ -143,6 +148,7 @@ int numberToken(char * input, int inputIndex)
 		return -1;
 	
 	list[lex_index].type = numbersym;
+        strcpy(list[lex_index].name, "numbersym");
 	list[lex_index++].value = atoi(buffer);
 	return ++curIndex;
 }
@@ -155,73 +161,97 @@ int symbolToken(char * input, int inputIndex)
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
   
+        char curCharString[] = {curChar, '\0'};
+  
         /// We handle cases based on what the current character is
         /// Some special symbols are multiple characters, and those are handled
 	switch (curChar)
 	{
 		case '.':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = periodsym;
 			return ++inputIndex;
 		case '[':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = lbracketsym;
 			return ++inputIndex;
 		case ']':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = rbracketsym;
 			return ++inputIndex;
 		case ',':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = commasym;
 			return ++inputIndex;
 		case ';':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = semicolonsym;
 			return ++inputIndex;
 		case '?':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = questionsym;
 			return ++inputIndex;
 		case '(':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = lparenthesissym;
 			return ++inputIndex;
 		case ')':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = rparenthesissym;
 			return ++inputIndex;
 		case '%':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = modsym;
 			return ++inputIndex;
 		case '*':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = multsym;
 			return ++inputIndex;
 		case '-':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = subsym;
 			return ++inputIndex;
 		case '+':
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = addsym;
 			return ++inputIndex;
 		case '<':
 			if (nextChar == '>')
 			{
+                                char tempString[] = {'<', '>', '\0'};
+                                strcpy(list[lex_index].name, tempString);
 				list[lex_index++].type = neqsym;
 				return inputIndex + 2;
 			}
 			
 			if (nextChar == '=')
 			{
+                                char tempString[] = {'<', '=', '\0'};
+                                strcpy(list[lex_index].name, tempString);
 				list[lex_index++].type = leqsym;
 				return inputIndex + 2;
 			}
 			
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = lsssym;
 			return ++inputIndex;
 		case ':':
 			if (nextChar == '=')
 			{
+                                char tempString[] = {':', '=', '\0'};
+                                strcpy(list[lex_index].name, tempString);
 				list[lex_index++].type = assignsym;
 				return inputIndex + 2;
 			}
 
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = colonsym;
 			return ++inputIndex;
 		case '=':
 			if (nextChar == '=')
 			{
+                                char tempString[] = {'=', '=', '\0'};
+                                strcpy(list[lex_index].name, tempString);
 				list[lex_index++].type = eqlsym;
 				return inputIndex + 2;
 			}
@@ -230,10 +260,13 @@ int symbolToken(char * input, int inputIndex)
 		case '>':
 			if (nextChar == '=')
 			{
+                                char tempString[] = {':', '=', '\0'};
+                                strcpy(list[lex_index].name, tempString);
 				list[lex_index++].type = geqsym;
 				return inputIndex + 2;
 			}
 			
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = gtrsym;
 			return ++inputIndex;
 		case '/':
@@ -242,24 +275,26 @@ int symbolToken(char * input, int inputIndex)
 				curChar = nextChar;
 				curIndex++;
         
-                                char curCharString[] = {curChar, '\0'};
+                                curCharString[0] = curChar;
         
 				while (curChar != '\n' && curChar != '\0' && curChar != '\r' && strcmp("\r\n", curCharString) != 0)
 				{
 					curChar = input[++curIndex];
-                                        char tempChar[] = {curChar, '\0'};
-                                        strcpy(curCharString, tempChar);
+                                        curCharString[0] = curChar;
 				}
-				
 				return curIndex;
 			}
 			
+                        strcpy(list[lex_index].name, curCharString);
 			list[lex_index++].type = divsym;
 			return ++inputIndex;
-		/// If it doesn't hit any of these cases, it's an invalid symbol
-		default:
-			return -1;
 	}
+ 
+  /// If it doesn't hit any of these cases, it's an invalid symbol
+  IFP = fopen("plzwork.txt", "a");
+  fprintf(IFP, "I am here: %c\n", curChar);
+  fclose(IFP);
+  return -1;
 }
 
 lexeme *lexanalyzer(char *input, int printFlag)
@@ -329,10 +364,14 @@ lexeme *lexanalyzer(char *input, int printFlag)
 		else
 		{
 			inputIndex = symbolToken(input, inputIndex);
+                        IFP = fopen("plzwork.txt", "a");
+                        fprintf(IFP, "I'm in lexanalyzer: %d\n", inputIndex);
 			
 			/// Invalid Symbol Error
 			if (inputIndex == -1)
 			{
+                                //fprintf(IFP, "I'm in if statement\n");
+                                //fclose(IFP);
 				if (printFlag)
 					printlexerror(4);
 				break;
@@ -346,7 +385,7 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			}
 		}
 	}
- 
+  
 	if (printFlag)
 		printtokens();
 	list[lex_index++].type = -1;
