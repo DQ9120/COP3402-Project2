@@ -268,14 +268,14 @@ int symbolToken(char * input, int inputIndex)
 			list[lex_index++].type = gtrsym;
 			return ++inputIndex;
 		case '/':
+			/// If the next character is also a /, then we have a comment, and the comment doesn't stop until we reach a new line
 			if (nextChar == '/')
 			{
 				curChar = nextChar;
 				curIndex++;
-        
         			curCharString[0] = curChar;
         
-				while (curChar != '\n' && curChar != '\0' && curChar != '\r' && strcmp("\r\n", curCharString) != 0)
+				while (curChar != '\n' && curChar != '\0' && curChar != '\r')
 				{
 					curChar = input[++curIndex];
           				curCharString[0] = curChar;
