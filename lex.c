@@ -290,12 +290,12 @@ int symbolToken(char * input, int inputIndex)
 			return ++inputIndex;
 	}
  
-  /// If it doesn't hit any of these cases, it's an invalid symbol
-  /// For some reason it crashes whenever there's an invalid symbol, not all of these print statements work
-  IFP = fopen("plzwork.txt", "a");
-  fprintf(IFP, "I am here: %c\n", curChar);
-  fclose(IFP);
-  return -1;
+        /// If it doesn't hit any of these cases, it's an invalid symbol
+        /// For some reason it crashes whenever there's an invalid symbol, not all of these print statements work
+        IFP = fopen("plzwork.txt", "a");
+        fprintf(IFP, "I am here: %c\n", curChar);
+        fclose(IFP);
+        return -1;
 }
 
 lexeme *lexanalyzer(char *input, int printFlag)
