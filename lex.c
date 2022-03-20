@@ -288,7 +288,8 @@ int symbolToken(char * input, int inputIndex)
 			list[lex_index++].type = divsym;
 			return ++inputIndex;
 	}
-  return -1;
+	
+  	return -1;
 }
 
 lexeme *lexanalyzer(char *input, int printFlag)
