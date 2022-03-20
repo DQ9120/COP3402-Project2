@@ -110,7 +110,7 @@ int reservedCheck(char * buffer)
 /// Handles the case that the first character of a new token is a digit
 int numberToken(char * input, int inputIndex)
 {
-  /// Stores the current character, the next character, and the current index with input
+  	/// Stores the current character, the next character, and the current index within input
 	char curChar = input[inputIndex];
 	char nextChar = input[inputIndex + 1];
 	int curIndex = inputIndex;
