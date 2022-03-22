@@ -258,7 +258,7 @@ int symbolToken(char * input, int inputIndex)
 		case '>':
 			if (nextChar == '=')
 			{
-        			char tempString[] = {':', '=', '\0'};
+        			char tempString[] = {'>', '=', '\0'};
         			strcpy(list[lex_index].name, tempString);
 				list[lex_index++].type = geqsym;
 				return inputIndex + 2;
