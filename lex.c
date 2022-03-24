@@ -316,14 +316,14 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			if (inputIndex == -1)
 			{
         			printlexerror(2);
-	      			exit(1);
+	      			return NULL;
 			}
 			
 			/// Invalid Identifier Error
 			else if (inputIndex == -2)
 			{
 			  	printlexerror(1);	
-				exit(1);
+				return NULL;
 			}
 			
 			/// No errors
@@ -342,7 +342,7 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			if (inputIndex == -1)
 			{
 			  	printlexerror(3);
-				exit(1);
+				return NULL;
 			}
 			
 			/// No error
@@ -361,7 +361,7 @@ lexeme *lexanalyzer(char *input, int printFlag)
 			if (inputIndex == -1)
 			{
 			  	printlexerror(4);
-				exit(1);
+				return NULL;
 			}
 			
 			/// No error
